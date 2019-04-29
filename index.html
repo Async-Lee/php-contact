@@ -1,0 +1,97 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>php测试</title>
+</head>
+<body>
+	<div>
+		<input type="text" name="keyword">
+		<button onclick="search()">id搜索</button>
+		<button onclick="getList(undefined, 'desc')">升序</button>
+		<button onclick="getList(undefined, 'asc')">降序</button>
+	</div>
+	<div class="user-list"></div>
+	<div>
+		<input type="text" name="username">
+		<input type="text" name="password">
+		<button onclick="register()">注册</button>
+	</div>
+	<div>
+		<input type="text" name="watchPwd">
+		<button onclick="userInfo()">看别人密码</button>
+	</div>
+	<div class="user-info"></div>
+</body>
+<script src="./jq.min.js"></script>
+<script>
+	getList()
+	function getList (id, sort) {
+		let params = {
+			id: id || undefined,
+			sort
+		}
+		$.get('./user/list', params, (res) => {
+			res = JSON.parse(res)
+			let data = res.body
+			if (res.code === 0) {
+				$('.user-list').empty()
+				data.forEach(item => {
+					$('.user-list').append($(`
+						<ul>
+							<li>
+								id：${item.id}，
+								用户名：${item.username}
+								余额：${item.money}
+								<a href="javascript:;" onclick="deleteItem(${item.id})">删除</a>
+							</li>
+						</ul>
+					`))
+				})
+			}
+		})
+	}
+	function register () {
+		let params = {
+			username: $('input[name=username]').val(),
+			password: $('input[name=password]').val()
+		}
+		$.post('./user/register', params, (res) => {
+			res = JSON.parse(res)
+			if (res.code === 0) {
+				getList()
+				$('input[name=username]').val('')
+				$('input[name=password]').val('')
+			}
+			alert(res.msg)
+		})
+	}
+	function userInfo () {
+		let params = {id: $('input[name=watchPwd]').val() || undefined}
+		$.get('./user/userInfo', params, (res) => {
+			res = JSON.parse(res)
+			if (res.code === 0) {
+				data = res.body
+				$('.user-info').html(`这个人的密码是:${data.pwd}`)	
+			} else {
+				$('.user-info').html(`用户不存在`)	
+			}
+			console.log(res)
+		})
+	}
+	function search () {
+		let id = $('input[name=keyword]').val() || undefined
+		getList(id)
+	}
+	function deleteItem (id) {
+		let params = {id: id || undefined}
+		$.post('./user/delete', params, (res) => {
+			res = JSON.parse(res)
+			if (res.code === 0) {
+				getList()
+			}
+			alert(res.msg)
+			console.log(res)
+		})
+	}
+</script>
+</html>
