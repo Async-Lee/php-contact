@@ -12,7 +12,6 @@ if ($file['error'] > 0) {
 	    	$id = $_POST["id"];
 			$tmp = $file['tmp_name'];
 			$name = $file['name'];
-			// move_uploaded_file($tmp, './uploadFil');
 			move_uploaded_file($tmp, "uploadFile/$name");
 			$site = "./uploadFile/$name";
 			$sql = "UPDATE User SET headerPic='$site' WHERE id=$id";
