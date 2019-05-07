@@ -32,17 +32,19 @@
 		}
 		$.get('./user/list', params, (res) => {
 			res = JSON.parse(res)
-			let data = res.body
+			let data = res.body.list || []
 			if (res.code === 0) {
 				$('.user-list').empty()
 				data.forEach(item => {
 					$('.user-list').append($(`
 						<ul>
 							<li>
+								<img alt="" class="uploadPic" style="height: 50px" src="${item.headerPic || ''}">
 								id：${item.id}，
 								用户名：${item.username}
 								余额：${item.money}
 								<a href="javascript:;" onclick="deleteItem(${item.id})">删除</a>
+								<input type="file" name="" class="uploadInput" user-id="${item.id}">
 							</li>
 						</ul>
 					`))
@@ -93,5 +95,36 @@
 			console.log(res)
 		})
 	}
+
+	$('.user-list').on('change', '.uploadInput', function (e) {
+
+		let	el = $(this),
+			id = $(this).attr('user-id'),
+			file = e.currentTarget.files[0],
+			data = new FormData()
+  		data.append('file', file)
+	  	data.append('id', id)
+		$.ajax({
+			url: './upload',
+			type: 'POST',
+			data: data,
+			cache: false,
+			processData: false,
+			contentType: false,
+			success: function (res) {
+				res = JSON.parse(res)
+				if (+res.code === 0) {
+					let src = res.body.url
+					el.siblings('.uploadPic').attr('src', src)
+				}
+			}
+		})
+
+		console.log(id)
+	})
+
+	$('.uploadInput').change(function (e) {
+		
+	})
 </script>
 </html>

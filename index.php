@@ -77,15 +77,15 @@ if ($conn->connect_error) {
 
 //关联数据表
 // $sql = 'SELECT a.id, a.username, b.age, b.sex FROM user a inner join userinfo b on a.id < b.id';
-$sql = 'SELECT a.id, a.username, b.age, b.sex FROM user a, userinfo b where a.id = b.id';
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        echo $row['id'].' '.$row['username'].' '.$row['sex'].' '.$row['age'].'<br/>';
-    }
-} else {
-    echo '{}';
-}
+// $sql = 'SELECT a.id, a.username, b.age, b.sex FROM user a, userinfo b where a.id = b.id';
+// $result = $conn->query($sql);
+// if ($result->num_rows > 0) {
+//     while($row = $result->fetch_assoc()) {
+//         echo $row['id'].' '.$row['username'].' '.$row['sex'].' '.$row['age'].'<br/>';
+//     }
+// } else {
+//     echo '{}';
+// }
 
 $conn->close();
 ?>

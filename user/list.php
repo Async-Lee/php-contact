@@ -18,10 +18,12 @@ if (is_array($_GET) && count($_GET)>0) {
 $sql = 'SELECT * FROM User'.$where;
 $result = $conn->query($sql);
 if ($result and $result->num_rows > 0) {
-    $arr = array();
+    $respone->body['list'] = array();
     while ($row = $result->fetch_assoc()) {
-    	array_push($respone->body, $row);
+    	array_push($respone->body['list'], $row);
     }
+    setcookie("token", "runoob", time()+3600);
+    $respone->body['token'] = $_COOKIE["token"];
 } else {
 	$respone->msg = '无数据';
 }
